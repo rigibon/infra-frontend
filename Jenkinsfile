@@ -32,8 +32,8 @@ pipeline {
       steps {
         sh 'docker login -u ${DOCKERHUB_CREDENTIALS_USR} -p ${DOCKERHUB_CREDENTIALS_PSW}'
         sh 'docker build . -t frontend-prueba'
-        sh "docker tag frontend-prueba rigibon/frontend-prueba:${env.BUILD_NUMBER}"
-        sh "docker push rigibon/frontend-prueba:${env.BUILD_NUMBER}"
+        sh "docker tag frontend-prueba  ${DOCKERHUB_CREDENTIALS_USR}/frontend-prueba:${env.BUILD_NUMBER}"
+        sh "docker push  ${DOCKERHUB_CREDENTIALS_USR}/frontend-prueba:${env.BUILD_NUMBER}"
       }
     }
 
@@ -41,7 +41,7 @@ pipeline {
       steps {
         sh "ssh rigibon@192.168.0.211 'kubectl delete deployment frontend-deployment'"
         sh "ssh rigibon@192.168.0.211 'kubectl delete service frontend-deployment'"
-        sh "ssh rigibon@192.168.0.211 'kubectl create deployment frontend-deployment --image=rigibon/frontend-prueba:${env.BUILD_NUMBER}'"
+        sh "ssh rigibon@192.168.0.211 'kubectl create deployment frontend-deployment --image= ${DOCKERHUB_CREDENTIALS_USR}/frontend-prueba:${env.BUILD_NUMBER}'"
         sh 'ssh rigibon@192.168.0.211 "kubectl expose deployment frontend-deployment --port=4200 --target-port=4200 --type=LoadBalancer"'
       }
     }
