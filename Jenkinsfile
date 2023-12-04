@@ -39,10 +39,7 @@ pipeline {
 
     stage('Deploy') {
       steps {
-        sh "ssh rigibon@192.168.0.211 'kubectl delete deployment frontend-deployment'"
-        sh "ssh rigibon@192.168.0.211 'kubectl delete service frontend-deployment'"
-        sh "ssh rigibon@192.168.0.211 'kubectl create deployment frontend-deployment --image=${DOCKERHUB_CREDENTIALS_USR}/frontend-prueba:${env.BUILD_NUMBER}'"
-        sh 'ssh rigibon@192.168.0.211 "kubectl expose deployment frontend-deployment --port=4200 --target-port=4200 --type=LoadBalancer"'
+        sh "ssh rigibon@192.168.0.211 'kubectl set image deployment/frontend-deployment frontend-prueba=${DOCKERHUB_CREDENTIALS_USR}/frontend-prueba:${env.BUILD_NUMBER}'"
       }
     }
   }
